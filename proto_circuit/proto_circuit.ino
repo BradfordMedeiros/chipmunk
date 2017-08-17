@@ -7,7 +7,7 @@ const char* ssid = "WaveG Public WiFi";
 const char* password = "<redacted>";
 
 double convertToVoltage(unsigned int analogReading){
-  return 3.3 * analogReading / 1024.0;
+  return analogReading / 1024.0;
 }
  
 void setup(void)
