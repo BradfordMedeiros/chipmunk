@@ -3,19 +3,7 @@
 <body  style="margin: 0; padding: 0; height: 100%; width: 100%;">
 <div style="width: 100%; height: 100%; background: linear-gradient(rgb(30,30,30), rgb(20,20,20)); display: flex; justify-content: center; align-items: center; flex-direction: column;">
 
-   <div id="title">(chip)munk</div>
-    <div id="access_point_settings">Is own access point? yes <input type="checkbox"> no <input type="checkbox"></div>
-    <div class="config">wifi name <input /> <button>Submit</button></div>
-    <div class="config">Use Mqtt <input type="checkbox"> Use Http <input type="checkbox"></div>
-    <div class="config">Mqtt topic <input> </div>
-    <div class="config">Http route <input> </div>
-    <div class="config">Input <input type="checkbox"> Output <input type="checkbox"></div>
-    <div class="config">Sampling Frequency (Hz) <input type="number"> </div>
-
-
-
-
-
+    <div id="app" />
 
 </div>
 </body>
@@ -24,18 +12,328 @@
     <title>(chip)munk</title>
     <script>
 
+        const Mode = () => {
+          const mode = document.createElement('div');
+          mode.id = 'mode';
+
+          const input = document.createElement('div');
+          input.innerText = 'input';
+
+          const output = document.createElement('div');
+          output.innerText = 'output';
+
+          const samplingFrequency = document.createElement('input');
+          samplingFrequency.setAttribute('placeholder', 'sampling frequency');
+
+          mode.append(input);
+          mode.append(output);
+          mode.append(samplingFrequency);
+
+          return mode;
+        };
+
+        const MqttOptions = () => {
+          const mqttOptions = document.createElement('div')
+
+          const brokerUrl = document.createElement('input');
+          brokerUrl.setAttribute('placeholder', 'broker url');
+          const mqttTopic = document.createElement('input');
+          mqttTopic.setAttribute('placeholder', 'mqtt topic');
+
+          mqttOptions.append(brokerUrl);
+          mqttOptions.append(mqttTopic);
+
+          return mqttOptions;
+        };
+
+        const HttpOptions = () => {
+          const httpOptions = document.createElement('div')
+
+          const httpUrlGet = document.createElement('input');
+          httpUrlGet.setAttribute('placeholder', 'input mode url');
+          //const httpUrlPost = document.createElement('input');
+          //httpUrlPost.setAttribute('placeholder', 'output mode url');
+
+          httpOptions.append(httpUrlGet);
+          //httpOptions.append(httpUrlPost);
+
+          return httpOptions;
+        };
+
+        const ProtocolSelection = ({ isAccessPoint, isMqttSelected, onHttpSelected, onMqttSelected }) => {
+          const protocolSelection = document.createElement('div');
+          protocolSelection.id = 'protocol_selection';
+
+          const use_http  = document.createElement('div');
+          use_http.innerText = 'http';
+          use_http.classList.add('selectable');
+          use_http.onclick = onHttpSelected;
+
+          const use_mqtt = document.createElement('div');
+          use_mqtt.innerText = 'mqtt';
+          const classType = isAccessPoint ? 'disabled': 'selectable';
+          use_mqtt.classList.add(classType);
+          use_mqtt.onclick = isAccessPoint ? undefined: onMqttSelected;
+
+          const selectedElement = isMqttSelected ? use_mqtt: use_http;
+          selectedElement.classList.add('selected');
+
+          protocolSelection.append(use_http);
+          protocolSelection.append(use_mqtt);
+          if (isMqttSelected){
+            protocolSelection.append(MqttOptions());
+          }else{
+            protocolSelection.append(HttpOptions());
+          }
+
+          return protocolSelection;
+        };
+
+        const AccessPointMode = ({ isAccessPoint, onWifiModeSelected, onApModeSelected }) => {
+          const mode = document.createElement('div');
+          mode.id = 'access_point_settings';
+
+          const use_ap  = document.createElement('div');
+          use_ap.innerText = 'access point';
+          use_ap.classList.add('selectable');
+          use_ap.onclick = onApModeSelected;
+
+          const use_wifi = document.createElement('div');
+          use_wifi.innerText = 'use wifi';
+          use_wifi.classList.add('selectable');
+          use_wifi.onclick = onWifiModeSelected;
+
+          const selectedElement = isAccessPoint ? use_ap: use_wifi;
+          selectedElement.classList.add('selected');
+
+          mode.append(use_ap);
+          mode.append(use_wifi);
+
+          return mode;
+        };
+        const Title = () => {
+          const title = document.createElement('div');
+          title.innerText = '(chip)munk';
+          title.id = 'title';
+          return title;
+        };
+
+        const NetworkInfo = ({ networkName, onNetworkChange, networkPassword, onNetworkPasswordChange}) => {
+          const networkSettings = document.createElement('div');
+          const networkNameInput = document.createElement('input');
+          networkNameInput.setAttribute('placeholder', 'Name of Network');
+          if (networkName){
+            networkNameInput.value = networkName;
+          }
+          networkNameInput.onblur = onNetworkChange;
+
+          const networkPasswordInput = document.createElement('input');
+          //networkPasswordInput.setAttribute('type', 'password');
+          networkPasswordInput.setAttribute('placeholder', 'Network Password');
+          networkPasswordInput.onblur = onNetworkPasswordChange;
+          if (networkPassword){
+            networkPasswordInput.value = networkPassword;
+          }
+
+          networkSettings.append(networkNameInput);
+          networkSettings.append(networkPasswordInput);
+          return networkSettings;
+        };
+
+        const Controls = ({ onRevert, onSubmit }) => {
+          const controls = document.createElement('div');
+          controls.id = 'controls';
+
+          const revert = document.createElement('button');
+          revert.innerText = 'revert';
+          revert.onclick = onRevert;
+
+          const submit = document.createElement('button');
+          submit.innerText = 'update settings';
+          submit.onclick = onSubmit;
+
+          controls.append(revert);
+          controls.append(submit);
+
+          return controls;
+        };
+
+        const Main = props => {
+          const Main = document.createElement('div');
+          Main.id = 'app';
+          Main.append(Title());
+          Main.append(AccessPointMode({
+            isAccessPoint: props.isAccessPoint,
+            onWifiModeSelected: props.onWifiModeSelected,
+            onApModeSelected: props.onApModeSelected,
+          }));
+
+          Main.append(NetworkInfo({
+            networkName: props.networkName,
+            onNetworkChange: props.onNetworkChange,
+            networkPassword: props.networkPassword,
+            onNetworkPasswordChange: props.onNetworkPasswordChange,
+          }));
+
+          Main.append(ProtocolSelection({
+            isAccessPoint: props.isAccessPoint,
+            isMqttSelected: props.isMqttSelected,
+            onHttpSelected: props.onHttpSelected,
+            onMqttSelected: props.onMqttSelected,
+          }));
+
+          Main.append(Mode());
+          Main.append(Controls({
+            onRevert: props.onRevert,
+            onSubmit: props.onSubmit,
+          }));
+
+          return Main;
+        };
+
+        const render = (settings, setSettings, onRevert, onSubmit) => {
+            document.querySelector('#app').replaceWith(Main({
+                isAccessPoint: settings.isAccessPoint,
+                isMqttSelected: settings.mode === 'mqtt',
+                onRevert,
+                onSubmit,
+                networkName: settings.networkName,
+                networkPassword: settings.networkPassword,
+                onNetworkChange: event => {
+                  const networkName = event.target.value;
+                  setSettings({
+                    networkName,
+                  })
+                },
+                onNetworkPasswordChange: event => {
+                  const networkPassword = event.target.value;
+                  setSettings({
+                    networkPassword,
+                  });
+                },
+                onWifiModeSelected: () => {
+                  setSettings({
+                    isAccessPoint: false,
+                  })
+                },
+                onApModeSelected: () => {
+                  setSettings({
+                    isAccessPoint: true,
+                    mode: 'http',
+                  })
+                },
+                onHttpSelected: () => {
+                  setSettings({
+                    mode: 'http',
+                  });
+                },
+                onMqttSelected: () => {
+                  setSettings({
+                    mode: 'mqtt',
+                  });
+                },
+              })
+            );
+        };
+
+
+        let controllerSettings = {
+          isAccessPoint: true,
+          mode: 'http',
+        };
+
+        let settings = {
+          isAccessPoint: true,
+          mode: 'http',
+        };
+
+
+
+        const setSettings = newSettings => {
+          const settingsNew = { };
+          Object.assign(settingsNew, settings);
+          Object.assign(settingsNew, newSettings);
+          settings = settingsNew;
+          render({
+            ...settings,
+          }, getSetSettings(), revert, submitSettings);
+        };
+
+        const getSetSettings = () => setSettings;
+        const getSettings = () => settings;
+        const revert = () => { setSettings(controllerSettings); };
+        const submitSettings = () => {
+          console.log('mock submit');
+          controllerSettings = settings;
+          setSettings(controllerSettings);
+        };
+
+        render(settings, getSetSettings(), revert, submitSettings);
+
+
+
+
     </script>
     <style>
         #title {
             font-size: 48px;
             color: whitesmoke;
+            display: flex;
+            justify-content: center;
         }
-        #access_point_settings{
+        #access_point_settings, #protocol_selection {
             padding: 28px;
             color: white;
+            display: flex;
+            justify-content: center;
+        }
+        #mode {
+            display: flex;
+            justify-content: space-between;
+            color: white;
+        }
+        #controls {
+            display: flex;
+            justify-content: center;
+        }
+        .selectable {
+            cursor: pointer;
+            margin-right: 8px;
+            margin-left: 8px;
+        }
+        .disabled {
+            cursor: not-allowed;
+        }
+        .selected {
+            border-bottom: 2px ridge blue;
         }
         .config {
             color: white;
+        }
+
+        .invisible {
+            display: none;
+        }
+
+        input {
+            background: none;
+            border: none;
+            border-bottom: 1px solid black;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            width: 280px;
+            color: steelblue;
+            text-align: center;
+        }
+        button {
+            background: none;
+            border: none;
+            color: white;
+            box-shadow: 0px 1px 1px 1px black inset;
+            padding: 18px;
+            cursor: pointer;
+            width: 180px;
+            margin-top: 40px;
         }
     </style>
 </head>
