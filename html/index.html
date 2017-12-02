@@ -3,7 +3,42 @@
 <body  style="margin: 0; padding: 0; height: 100%; width: 100%;">
 <div style="width: 100%; height: 100%; background: linear-gradient(rgb(30,30,30), rgb(20,20,20)); display: flex; justify-content: center; align-items: center; flex-direction: column;">
 
-    <div id="app" />
+    <div id="casing">
+        <div id="content">
+            <div id="title"><div id="title_chip">(chip)</div>munk</div>
+            <div id="access_point_settings">
+                <div class="selectable selected">access point</div>
+                <div class="selectable">connect to wifi</div>
+            </div>
+            <div id="network_settings">
+                <input placeholder="Name of Network" />
+                <input placeholder="Network Password" />
+            </div>
+            <div id="protocol_selection">
+                <div id="protocol">
+                    <div class="selectable">http</div>
+                    <div class="selectable">mqtt</div>
+                </div>
+                <div id="protocol_options">
+                    <input placeholder="input mode url"/>
+                </div>
+            </div>
+            <div id="mode">
+                <div id="mode_selection">
+                    <div class="selectable">input</div>
+                    <div class="selectable">output</div>
+                </div>
+                <div id="mode_options">
+                    <input placeholder="sampling frequency" />
+                </div>
+            </div>
+            <div id="controls">
+                <button>Revert</button>
+                <button>Submit</button>
+            </div>
+        </div>
+    </div>
+
 
 </div>
 </body>
@@ -11,329 +46,146 @@
     <meta charset="utf-8">
     <title>(chip)munk</title>
     <script>
+        let deviceSettings = {
 
-        const Mode = () => {
-          const mode = document.createElement('div');
-          mode.id = 'mode';
-
-          const input = document.createElement('div');
-          input.innerText = 'input';
-
-          const output = document.createElement('div');
-          output.innerText = 'output';
-
-          const samplingFrequency = document.createElement('input');
-          samplingFrequency.setAttribute('placeholder', 'sampling frequency');
-
-          mode.append(input);
-          mode.append(output);
-          mode.append(samplingFrequency);
-
-          return mode;
         };
-
-        const MqttOptions = () => {
-          const mqttOptions = document.createElement('div')
-
-          const brokerUrl = document.createElement('input');
-          brokerUrl.setAttribute('placeholder', 'broker url');
-          const mqttTopic = document.createElement('input');
-          mqttTopic.setAttribute('placeholder', 'mqtt topic');
-
-          mqttOptions.append(brokerUrl);
-          mqttOptions.append(mqttTopic);
-
-          return mqttOptions;
-        };
-
-        const HttpOptions = () => {
-          const httpOptions = document.createElement('div')
-
-          const httpUrlGet = document.createElement('input');
-          httpUrlGet.setAttribute('placeholder', 'input mode url');
-          //const httpUrlPost = document.createElement('input');
-          //httpUrlPost.setAttribute('placeholder', 'output mode url');
-
-          httpOptions.append(httpUrlGet);
-          //httpOptions.append(httpUrlPost);
-
-          return httpOptions;
-        };
-
-        const ProtocolSelection = ({ isAccessPoint, isMqttSelected, onHttpSelected, onMqttSelected }) => {
-          const protocolSelection = document.createElement('div');
-          protocolSelection.id = 'protocol_selection';
-
-          const use_http  = document.createElement('div');
-          use_http.innerText = 'http';
-          use_http.classList.add('selectable');
-          use_http.onclick = onHttpSelected;
-
-          const use_mqtt = document.createElement('div');
-          use_mqtt.innerText = 'mqtt';
-          const classType = isAccessPoint ? 'disabled': 'selectable';
-          use_mqtt.classList.add(classType);
-          use_mqtt.onclick = isAccessPoint ? undefined: onMqttSelected;
-
-          const selectedElement = isMqttSelected ? use_mqtt: use_http;
-          selectedElement.classList.add('selected');
-
-          protocolSelection.append(use_http);
-          protocolSelection.append(use_mqtt);
-          if (isMqttSelected){
-            protocolSelection.append(MqttOptions());
-          }else{
-            protocolSelection.append(HttpOptions());
-          }
-
-          return protocolSelection;
-        };
-
-        const AccessPointMode = ({ isAccessPoint, onWifiModeSelected, onApModeSelected }) => {
-          const mode = document.createElement('div');
-          mode.id = 'access_point_settings';
-
-          const use_ap  = document.createElement('div');
-          use_ap.innerText = 'access point';
-          use_ap.classList.add('selectable');
-          use_ap.onclick = onApModeSelected;
-
-          const use_wifi = document.createElement('div');
-          use_wifi.innerText = 'use wifi';
-          use_wifi.classList.add('selectable');
-          use_wifi.onclick = onWifiModeSelected;
-
-          const selectedElement = isAccessPoint ? use_ap: use_wifi;
-          selectedElement.classList.add('selected');
-
-          mode.append(use_ap);
-          mode.append(use_wifi);
-
-          return mode;
-        };
-        const Title = () => {
-          const title = document.createElement('div');
-          title.innerText = '(chip)munk';
-          title.id = 'title';
-          return title;
-        };
-
-        const NetworkInfo = ({ networkName, onNetworkChange, networkPassword, onNetworkPasswordChange}) => {
-          const networkSettings = document.createElement('div');
-          const networkNameInput = document.createElement('input');
-          networkNameInput.setAttribute('placeholder', 'Name of Network');
-          if (networkName){
-            networkNameInput.value = networkName;
-          }
-          networkNameInput.onblur = onNetworkChange;
-
-          const networkPasswordInput = document.createElement('input');
-          //networkPasswordInput.setAttribute('type', 'password');
-          networkPasswordInput.setAttribute('placeholder', 'Network Password');
-          networkPasswordInput.onblur = onNetworkPasswordChange;
-          if (networkPassword){
-            networkPasswordInput.value = networkPassword;
-          }
-
-          networkSettings.append(networkNameInput);
-          networkSettings.append(networkPasswordInput);
-          return networkSettings;
-        };
-
-        const Controls = ({ onRevert, onSubmit }) => {
-          const controls = document.createElement('div');
-          controls.id = 'controls';
-
-          const revert = document.createElement('button');
-          revert.innerText = 'revert';
-          revert.onclick = onRevert;
-
-          const submit = document.createElement('button');
-          submit.innerText = 'update settings';
-          submit.onclick = onSubmit;
-
-          controls.append(revert);
-          controls.append(submit);
-
-          return controls;
-        };
-
-        const Main = props => {
-          const Main = document.createElement('div');
-          Main.id = 'app';
-          Main.append(Title());
-          Main.append(AccessPointMode({
-            isAccessPoint: props.isAccessPoint,
-            onWifiModeSelected: props.onWifiModeSelected,
-            onApModeSelected: props.onApModeSelected,
-          }));
-
-          Main.append(NetworkInfo({
-            networkName: props.networkName,
-            onNetworkChange: props.onNetworkChange,
-            networkPassword: props.networkPassword,
-            onNetworkPasswordChange: props.onNetworkPasswordChange,
-          }));
-
-          Main.append(ProtocolSelection({
-            isAccessPoint: props.isAccessPoint,
-            isMqttSelected: props.isMqttSelected,
-            onHttpSelected: props.onHttpSelected,
-            onMqttSelected: props.onMqttSelected,
-          }));
-
-          Main.append(Mode());
-          Main.append(Controls({
-            onRevert: props.onRevert,
-            onSubmit: props.onSubmit,
-          }));
-
-          return Main;
-        };
-
-        const render = (settings, setSettings, onRevert, onSubmit) => {
-            document.querySelector('#app').replaceWith(Main({
-                isAccessPoint: settings.isAccessPoint,
-                isMqttSelected: settings.mode === 'mqtt',
-                onRevert,
-                onSubmit,
-                networkName: settings.networkName,
-                networkPassword: settings.networkPassword,
-                onNetworkChange: event => {
-                  const networkName = event.target.value;
-                  setSettings({
-                    networkName,
-                  })
-                },
-                onNetworkPasswordChange: event => {
-                  const networkPassword = event.target.value;
-                  setSettings({
-                    networkPassword,
-                  });
-                },
-                onWifiModeSelected: () => {
-                  setSettings({
-                    isAccessPoint: false,
-                  })
-                },
-                onApModeSelected: () => {
-                  setSettings({
-                    isAccessPoint: true,
-                    mode: 'http',
-                  })
-                },
-                onHttpSelected: () => {
-                  setSettings({
-                    mode: 'http',
-                  });
-                },
-                onMqttSelected: () => {
-                  setSettings({
-                    mode: 'mqtt',
-                  });
-                },
-              })
-            );
-        };
-
-
-        let controllerSettings = {
-          isAccessPoint: true,
-          mode: 'http',
-        };
-
         let settings = {
           isAccessPoint: true,
-          mode: 'http',
+          protocol: 'http',
         };
-
-
-
-        const setSettings = newSettings => {
-          const settingsNew = { };
-          Object.assign(settingsNew, settings);
-          Object.assign(settingsNew, newSettings);
-          settings = settingsNew;
-          render({
-            ...settings,
-          }, getSetSettings(), revert, submitSettings);
+        const selectIsAccessPoint = isAccessPoint => {
+          settings.isAccessPoint = isAccessPoint;
         };
-
-        const getSetSettings = () => setSettings;
-        const getSettings = () => settings;
-        const revert = () => { setSettings(controllerSettings); };
-        const submitSettings = () => {
-          console.log('mock submit');
-          controllerSettings = settings;
-          setSettings(controllerSettings);
+        const selectProtocol = protocol => {
+            settings.protocol = protocol;
         };
-
-        render(settings, getSetSettings(), revert, submitSettings);
-
-
-
 
     </script>
     <style>
+        #casing {
+            padding: 5.5em;
+            box-shadow: 0px 4px 10px 2px orangered;
+            background: linear-gradient(rgb(34,34,34),rgb(28,28,28));
+
+        }
+        #content {
+            position: relative;
+            padding-top: 18px;
+            border: 1px solid rgb(40,40,40);
+        }
         #title {
             font-size: 48px;
             color: whitesmoke;
             display: flex;
             justify-content: center;
+            position: relative;
+            width: 100%;
         }
-        #access_point_settings, #protocol_selection {
-            padding: 28px;
+        #title_chip {
+            color: orangered;
+        }
+        #network_settings {
+            position: relative;
+            width: 100%;
+            display: flex;
+        }
+        #access_point_settings {
+            padding: 22px;
+            display: flex;
+            justify-content: center;
+            border-top: 1px solid black;
+            border-bottom: 1px solid black;
+            margin: 18px;
+            background: brown;
+            color: whitesmoke;
+            box-shadow: 0px 0px 4px 1px black inset;
+        }
+        #protocol_selection{
             color: white;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            padding-top: 48px;
+            padding-bottom: 28px;
+            width: 100%;
+            position: relative;
+        }
+        #protocol {
+            position: absolute;
+            left: 0;
+            width: 50%;
             display: flex;
             justify-content: center;
         }
+        #protocol_options {
+            position: absolute;
+            left: 50%;
+            width: 50%;
+        }
         #mode {
-            display: flex;
-            justify-content: space-between;
             color: white;
+            padding-top: 28px;
+            padding-bottom: 28px;
+            width: 100%;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+        #mode_selection {
+            position: absolute;
+            left: 0;
+            width: 50%;
+            justify-content: center;
+            display: flex;
+        }
+        #mode_options {
+            position: absolute;
+            right: 0;
+            width: 50%;
         }
         #controls {
             display: flex;
             justify-content: center;
         }
+
         .selectable {
             cursor: pointer;
             margin-right: 8px;
             margin-left: 8px;
         }
+        .selectable:hover {
+            color: silver;
+        }
         .disabled {
             cursor: not-allowed;
         }
         .selected {
-            border-bottom: 2px ridge blue;
-        }
-        .config {
-            color: white;
+            border-bottom: 2px ridge white;
         }
 
-        .invisible {
-            display: none;
-        }
 
         input {
             background: none;
             border: none;
-            border-bottom: 1px solid black;
+            border-bottom: 1px solid rgb(10,10,10);
             padding-top: 8px;
             padding-bottom: 8px;
             width: 280px;
-            color: steelblue;
+            color: lightsteelblue;
             text-align: center;
         }
         button {
             background: none;
             border: none;
             color: white;
-            box-shadow: 0px 1px 1px 1px black inset;
+            box-shadow: 0px 2px 1px 1px rgba(0, 0, 0, 0.34) inset;
             padding: 18px;
             cursor: pointer;
             width: 180px;
             margin-top: 40px;
+        }
+        .button:hover {
+            color: silver;
         }
     </style>
 </head>
