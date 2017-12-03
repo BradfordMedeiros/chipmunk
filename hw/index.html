@@ -1,0 +1,109 @@
+<!doctype html>
+<html style="height: 100%; width:  100%; font-family: 'Courier New'" lang="en">
+<body  style="margin: 0; padding: 0; height: 100%; width: 100%;">
+<div style="width: 100%; height: 100%; background: linear-gradient(rgb(210,210,210), rgb(180,180,210)); display: flex; justify-content: center; align-items: center; flex-direction: column;">
+    <div style="font-size: 70px; padding: 18px; color: whitesmoke; text-shadow: 0px 2px 2px black;">Rubber Ducky Web</div>
+    <div style="font-size: 28px;">
+	
+        <button onclick="turn_off_light()" style="font-size: 18px; padding: 12px; cursor: pointer; background: rgb(30,30,30); color: whitesmoke;  ">Turn Off Light</button>
+        <button onclick="turn_on_light()" style="font-size: 18px; padding: 12px; cursor: pointer; background: rgb(30,30,30); color: whitesmoke;  ">Turn On Light</button>
+
+        <svg style="position: absolute; top: 0; left: 0; opacity: 0.2; width: 100%; pointer-events: none;  height: 100%;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="504px" height="504px" viewBox="0 0 504 504" enable-background="new 0 0 504 504" xml:space="preserve">
+        <g id="Layer_2">
+	        <path fill="#F1C817" d="M101.163,163.049c0,0,40.651,56.911,133.333,60.163c0,0,7.317,4.878,17.886-4.878
+		        c0,0,4.877-6.504-2.439-17.073c0,0-16.26-12.196-27.642-27.643c0,0-35.772-43.901-10.569-87.804c0,0,17.073-53.659,83.74-53.659
+		        c0,0,64.228-8.13,104.878,47.967c0,0,14.635,32.52-0.812,78.862c0,0-21.138,34.146-3.252,52.846c0,0,0.812,7.316,24.39,22.763
+		        c0,0,28.455,17.886,39.837,55.284c0,0,16.26,38.213-18.699,82.928c0,0-43.9,60.976-117.885,61.788c0,0-80.488,8.942-172.358,0.812
+		        c0,0-26.017-4.877-51.22-26.016c0,0-39.837-26.83-60.976-55.285c0,0-25.203-56.098-3.251-130.894
+		        C36.123,223.21,65.389,112.643,101.163,163.049z"/>
+        </g>
+        <g id="Layer_4">
+	        <circle fill="#FFFFFF" cx="338.935" cy="91.877" r="22.764"/>
+        </g>
+        <g id="Layer_5">
+	        <circle id="eye" cx="340.188" cy="88" r="13.008"/>
+        </g>
+        <g id="Layer_6">
+	        <path fill="#FDE528" d="M144.253,247.602c0,0,68.293,16.261,145.529,22.765c0,0,50.407,8.942,56.098,24.39
+		        c0,0,15.446,30.895,0.812,54.472c0,0-7.317,21.139-32.521,30.895c0,0-27.643,13.007-73.983,4.064c0,0-48.781-8.131-59.35-17.073
+		        c0,0,22.764,5.691,65.854,5.691c0,0,18.698,0.813,47.154-2.438c0,0,14.635-1.627,29.269-24.391c0,0,21.14-27.642-4.064-46.341
+		        c0,0-6.505-9.756-56.911-20.325c0,0-35.772-4.879-69.918-13.009C192.221,266.301,157.261,261.422,144.253,247.602z"/>
+	        <path fill="#FDE528" d="M62.14,204.513l4.878-10.569c0,0,2.439-11.382,13.821-3.252l13.008,19.512c0,0,4.878,12.196,21.138,11.382
+		        c0,0,18.699-7.318,32.52-3.252l29.269,8.943c0,0,24.39,6.504,32.52-0.813c0,0,6.04-1.798-24.293-8.131
+		        c0,0-22.667-2.334-42.667-15.667c0,0-21.667-9.666-44.333-36.333l-7-6c0,0-7.667-8-17-0.333c0,0-21,23.333-25.333,43.333
+		        l-2.333,7.333c0,0-4.333,7.333,5.667,4C52,214.666,59.612,212.693,62.14,204.513z"/>
+	        <path fill="#FDE528" d="M414.001,265.998c0,0,13.333,2.668,28.333,11.334c0,0,14.999,5.333,15.333,29.333c0,0,3.333,23.333-10,45
+                c0,0-10.333,26.001-40.333,47.334c0,0-18.332,20.667-69.666,20.667c0,0-12.334,0-2.334-4l11.667-4c0,0,10.667-2.666,1-11.333
+		        L343.668,398c0,0-4.334-4.333,3.666-4c0,0,41.001,5.332,47.334-3.334c0,0,9.667-5.665,25-22.332c0,0,8-8,2.333-16.667l-6.333-9.333
+		        c0,0-4.334-8.333,0.333-16l8.667-11.667c0,0,8-5.334,2-16.667c0,0-6.667-11.334-20.667-24
+		        C406.001,274,389.668,260.329,414.001,265.998z"/>
+        </g>
+        <g id="Layer_7">
+	        <path fill="#FDE528" d="M251,75.668l21.667-3c0,0,14.668-4.333,13.334,10.333c0,0,0.334,12.666-6,23.333c0,0-11,14.667-32,29.667
+		        c0,0-13.667,12-18-2c0,0-3.333-17-1.667-32C228.333,102.001,228.666,81.334,251,75.668z"/>
+	        <path fill="#FDE528" d="M264.332,195.334c0,0,12.334,9.667,52,7.667c0,0,19.666-1.334,3.333,8.333c0,0-30.333,14.333-66.333,20
+		        c0,0-17.334,2.667-1.667-5.667c0,0,14.334-9.333,3.667-25C255.332,200.667,245.999,185.334,264.332,195.334z"/>
+	        <path fill="#FDE528" d="M57.665,262.334c0,0,5,40.001,28.667,50.334c0,0,10.667,5.667,13-1c0,0,4.333-6.001,4.333-17.334
+		        c0,0,1-7.666-5.333-11.333c0,0-17.666-9.666-31.333-24.333C66.999,258.668,53.999,244.667,57.665,262.334z"/>
+            <path fill="#FDE528" d="M130.999,284.334c0,0,12,8.667,50.333,11.667c0,0,8,0.666,14-9.667c0,0,3.667-4.999-4-3.666
+                c0,0-19,2.666-44-11.667c0,0-12.667-6.333-17.667-1.333C129.665,269.668,123.999,281.667,130.999,284.334z"/>
+	        <path fill="#FDE528" d="M137.332,315.668c0,0,13.667,4.999,38.667,3.666c0,0,4.333,1.001,10.333-4.666c0,0,7-8,3-8  c0,0-14.667,3-20,1c0,0-8.333-1-14.333-4c0,0-7-3-14.333-2.667c0,0-8.667-5.333-8,4 C132.665,305.001,131.998,315.002,137.332,315.668z"/>
+	        <path fill="#FDE528" d="M142.665,341.334c0,0,4,3,24,3.667c0,0,17.333,2.333,22.333-3c0,0,7.333-8.333,1-8
+		        c0,0-9.667,1.667-19.667-1c0,0-11.667-2.333-18.333-4.333c0,0-13.667-4.666-13,3C138.998,331.668,137.331,339,142.665,341.334z"/>
+        </g>
+        <g id="Layer_3">
+	        <path fill="#CA3627" d="M402.789,153.292c0,0,65.854-26.829,57.724-52.845c0,0,0-25.203-17.073-15.447
+		        c0,0-16.259,13.008-22.764,5.691l-15.447-6.504c0,0-15.448-7.317-13.009,8.943c0,0,7.317,32.521,2.439,43.903
+		        C394.659,137.032,391.407,163.048,402.789,153.292z"/>
+        </g>
+        </svg>
+    </div>
+</div>
+</body>
+<head>
+    <meta charset="utf-8">
+    <title>Rubber Ducky</title>
+    <script>
+      const turn_on_light = () => fetch('turn_on_led');
+      const turn_off_light = () => fetch('turn_off_led');
+
+      const calculate_radians = (new_x, new_y, duck_eye_x, duck_eye_y) => {
+        const y_delta = duck_eye_y - new_y;
+        const x_delta = duck_eye_x - new_x;
+        return Math.atan(y_delta / x_delta);
+      };
+
+      const original_duck_eye_x = 340.188;
+      const original_duck_eye_y = 88;
+      const eye_movement_elasticity = 10;
+
+
+
+      const get_new_eye = (x_coordinate, y_coordinate) => {
+        const radians = calculate_radians(x_coordinate, y_coordinate, original_duck_eye_x, original_duck_eye_y);
+        const change_x = Math.cos(radians) * eye_movement_elasticity;
+        const change_y = Math.sin(radians) * eye_movement_elasticity;
+        const new_eye_x = change_x + original_duck_eye_x;
+        const new_eye_y = change_y + original_duck_eye_y;
+
+        return { new_eye_x, new_eye_y };
+      };
+
+      const set_eye = (x_coordinate, y_coordinate) => {
+        document.querySelector('#eye').cy.baseVal.value = y_coordinate;
+        document.querySelector('#eye').cx.baseVal.value = x_coordinate;
+      };
+
+      const handleMousemove = (event) => {
+        const x_coordinate = event.x;
+        const y_coordinate = event.y;
+
+        const new_coordinates = get_new_eye(x_coordinate, y_coordinate);
+        set_eye(new_coordinates.new_eye_x, new_coordinates.new_eye_y);
+      };
+
+
+      document.addEventListener('mousemove', handleMousemove);
+    </script>
+</head>
+</html>
