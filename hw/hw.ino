@@ -27,9 +27,8 @@ const char* inTopic = "thing";
 const char* ssid = "WaveG Public WiFi";
 const char* password =  "";
 
-const int DIGITAL_PIN = 5; // maps to d1
-
-void reconnect() {
+// @todo should add some reconnection logic
+/*void reconnect() {
   // Loop until we're reconnected
   while (!client.connected()) {
     Serial.print("Attempting MQTT connection...");
@@ -48,29 +47,22 @@ void reconnect() {
       delay(5000);
     }
   }
-}
+}*/
+
 void setup() {
-    pinMode(DIGITAL_PIN, OUTPUT);
-    
     Serial.begin(115200);
     WiFi.begin(ssid);  //Connect to the WiFi network
  
     while (WiFi.status() != WL_CONNECTED) {  //Wait for connection
- 
         delay(500);
         Serial.println("Waiting to connect...");
  
     }
-
-    Serial.println("settings as string:");
-    Serial.println(getSettingsAsString());
- 
+     
     Serial.print("IP address: ");
     Serial.println(WiFi.localIP());  //Print the local IP
 
     server.on("/", serve_index);
-    server.on("/turn_on_led", turn_on_led);
-    server.on("/turn_off_led", turn_off_led);
     server.on("/settings", send_wireless_settings);
     server.on("/save_settings", save_wireless_settings);
    
@@ -83,9 +75,8 @@ void setup() {
 
 int i = 0; 
 void loop() {
-     server.handleClient(); //Handling of incoming requests
+    server.handleClient(); //Handling of incoming requests
 
-    digitalWrite(DIGITAL_PIN, 1);
     delay(40);  // 25 = 1second 
     i++;
 
@@ -145,16 +136,6 @@ void save_wireless_settings(){
 void send_wireless_settings(){
   server.send(200, "text/plain", getSettingsAsString());
 }
-
-void turn_off_led() {
-    digitalWrite(DIGITAL_PIN, 0);
-    server.send(200,"text/plain", "ok");
-}
-
-void turn_on_led() {
-    server.send(200,"text/plain", "ok");
-}
-
 
 void serve_index()  {
     server.send(200, "text/html", read_html());
