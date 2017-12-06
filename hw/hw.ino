@@ -49,6 +49,17 @@ const char* password =  "";
   }
 }*/
 
+void callback(char* topic, byte* payload, unsigned int length) {
+  // Conver the incoming byte array to a string
+  payload[length] = '\0'; // Null terminator used to terminate the char array
+  String message = (char*)payload;
+
+  Serial.print("Message arrived on topic: [");
+  Serial.print(topic);
+  Serial.print("], ");
+  Serial.println(message);
+}
+
 void setup() {
     Serial.begin(115200);
     WiFi.begin(ssid);  //Connect to the WiFi network
@@ -70,13 +81,15 @@ void setup() {
     Serial.println("Server listening");
 
     client.setServer(mqtt_server, 1883);
+    client.setCallback(callback);
     client.connect(clientID);
+    client.subscribe("temperature");
 }
 
 int i = 0; 
 void loop() {
     server.handleClient(); //Handling of incoming requests
-
+    client.loop();
     delay(40);  // 25 = 1second 
     i++;
 
